@@ -9,17 +9,19 @@ const user_Controller = require('../controllers/userController');
 router.post('/login', auth_Controller.login);
 
 router.post('/register', auth_Controller.register);
-//
-// router.post('/', post_Controller.postBlog);
 
 router.get('/posts', post_Controller.allPosts);
 
-router.get('/posts/:postid', post_Controller.singlePost)
+router.get('/posts/:postid', post_Controller.singlePost);
 
 router.post('/posts', passport.authenticate('jwt', {session: false}), post_Controller.createPost);
 
 router.get('/users/:userid',  passport.authenticate('jwt', {session: false}), user_Controller.userProfile);
 
-router.get('/users',  passport.authenticate('jwt', {session: false}), user_Controller.allUsers)
+router.get('/users', passport.authenticate('jwt', {session: false}), user_Controller.allUsers);
+
+router.get('/users/:userid/posts', passport.authenticate('jwt', {session: false}), user_Controller.usersPosts);
+
+router.post('/posts/:postid/comments', comment_Controller.createComment);
 
 module.exports = router;

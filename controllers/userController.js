@@ -23,3 +23,18 @@ exports.userProfile = async function(req, res, next){
     return res.status(400).json({message: 'No User with that Id'})
   }
 }
+
+exports.usersPosts = async function (req, res, next){
+  try{
+    let allPosts = await Users.find({_id: req.params.userid}, { _id: 0, posts: 1})
+    .populate({
+      path:'posts',
+      model:'Post'
+    })
+    res.status(200).json({allPosts})
+  } catch(err){
+    return res.status(400).json({
+      message: 'no posts'
+    })
+  }
+};

@@ -9,8 +9,7 @@ var UserSchema = new Schema({
   admin: {type: Boolean, default: false},
   member:{type: Boolean, default: false},
   timeStamp: {type: Date, default: Date.now, required: true},
-  posts:{type: Schema.Types.ObjectId, ref: 'Post'},
-  comments:{type: Schema.Types.ObjectId, ref:'Comment'}
+  posts:[{type: Schema.Types.ObjectId, ref: 'Post'}],
 })
 
 module.exports = mongoose.model('User', UserSchema);
