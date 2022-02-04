@@ -1,75 +1,81 @@
 const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
+const passport = require('passport')
+const { body, validationResult } = require('express-validator')
 const bcrypt= require('bcryptjs');
 const Users = require('../models/users')
-const passport = require('passport')
-
-exports.allUsers = async function(req, res, next){
-  try{
-    let users = await Users.find({});
-    return res.status(200).json({users})
-  }
-  catch(err){
-    return res.status(400).json({message: 'No users'})
-  }
-};
 
 exports.login = async function (req, res, next){
   try{
   passport.authenticate('local', {session: false}, (err, user, info) =>{
     if (err || !user){
-      return res.status(400).json({
-        info,
-        user
+      const error = new Error('User does not exist')
+      return res.json({
+        info
       })
     }
   req.login(user, {session: false}, (err) => {
     if (err){
-      return res.json(err);
+      next(err);
     }
     // create token
+    const body = {_id: user._id, username: user.username}
+    const token = jwt.sign({user: body}, process.env.SECRET_KEY, {expiresIn: '1d'});
 
-    const token = jwt.sign({user}, process.env.SECRET_KEY, {expiresIn: '60s'});
-    return res.json({user, token});
+    return res.json({body, token});
 
   });
 }) (req, res, next);
-
-} catch(err){
-  res.status(400).json({err})
+} catch (err){
+  res.json({
+    err
+  })
 }
 };
 
-
-exports.register = async function(req, res, next) {
-try{
-  let userExists = await Users.findOne({username: req.body.username});
-  console.log(userExists)
-  console.log(req.body)
-  if(userExists !== null){
-    return res.status(200).json({
-      message: 'User exists'
+exports.register = [
+body('username').trim().isLength({min:2})
+  .custom( async(username) => {
+    try {
+      const usernameExists = await Users.findOne({username: username});
+      if (usernameExists){
+        throw new Error('Username already exists');
+      }
+    } catch (err){
+      throw new Error(err);
+    }
+  }),
+body('password').isLength({min:6}).withMessage('Password must be 6 characters long'),
+body('confirmPassword')
+  .custom( async( value, {req}) => {
+    if (value !== req.body.password){
+      throw new Error('Password confirmation does not match password');
+    }
+    return true
+  }),
+async(req, res, next) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()){
+    return res.json({
+      username: req.body.username,
+      errors: errors.array()
     });
   }
-  bcrypt.hash(req.body.password, 12, (err, hashedPassword) =>{
-    const user = new Users({
-      username: req.body.username,
-      password: hashedPassword,
-      admin: false,
-      member: true
+    bcrypt.hash(req.body.password, 12, (err, hashedPassword) => {
+      const user= new Users({
+        username:req.body.username,
+        password: hashedPassword,
+        admin: false,
+        member: true
+      })
+      user.save( err => {
+        if (err){
+          return next(err)
+        }
+        res.json({
+          message: 'User created successfully',
+        })
+      })
     })
-    user.save(err => {
-      if (err) {
-        return res.status(400).json({
-          err
-        });
-      }
-      return res.status(200).json({
-        message: 'User created successfully'
-      });
-    })
-  })
-} catch(err){
-  res.status(400).json({err, username: req.body.username, password: req.body.password})
-}
-};
+    (req, res, next)
+    }
+]
