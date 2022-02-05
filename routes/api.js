@@ -10,9 +10,27 @@ router.post('/login', auth_Controller.login);
 
 router.post('/register', auth_Controller.register);
 
+router.post('/logout', auth_Controller.logout);
+
 router.get('/posts', post_Controller.allPosts);
 
 router.get('/posts/:postid', post_Controller.singlePost);
+
+router.get('/posts/:postid/comments', comment_Controller.allCommentsOnPost);
+
+router.post('/posts/:postid/comments', passport.authenticate('jwt', {session: false}), comment_Controller.createComment);
+
+router.delete('/posts/:postid/comments/:commentid', passport.authenticate('jwt', {session: false}), comment_Controller.deleteSingleComment);
+
+router.delete('/posts/:postid', passport.authenticate('jwt', {session: false}), post_Controller.deleteSinglePost);
+
+router.put('/comments', passport.authenticate('jwt', {session: false}), comment_Controller.updateLike);
+
+router.get('/comments', passport.authenticate('jwt', {session: false}), comment_Controller.allComments);
+
+router.get('/comments/:commentid', passport.authenticate('jwt', {session: false}), comment_Controller.singleComment);
+
+router.put('/posts/:postid', passport.authenticate('jwt', {session: false}), post_Controller.updateLike);
 
 router.post('/posts', passport.authenticate('jwt', {session: false}), post_Controller.createPost);
 
@@ -22,6 +40,5 @@ router.get('/users', passport.authenticate('jwt', {session: false}), user_Contro
 
 router.get('/users/:userid/posts', passport.authenticate('jwt', {session: false}), user_Controller.usersPosts);
 
-router.post('/posts/:postid/comments', comment_Controller.createComment);
 
 module.exports = router;

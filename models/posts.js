@@ -10,7 +10,8 @@ var PostSchema = new Schema({
   comments:[{type:Schema.Types.ObjectId, ref:'Comment'}],
   timeStamp:{type: Date, default: Date.now, requried: true},
   published:{type:Boolean, default: false},
-  likes:{type: Number, default: 0, }
+  likeCount:{type: Number, default: 0, },
+  likes:[{type:Schema.Types.ObjectId, ref: 'User'}]
 });
 
 module.exports = mongoose.model('Post', PostSchema);

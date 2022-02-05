@@ -18,7 +18,7 @@ exports.login = async function (req, res, next){
       next(err);
     }
     // create token
-    const body = {_id: user._id, username: user.username}
+    const body = {_id: user._id, username: user.username, admin: user.admin}
     const token = jwt.sign({user: body}, process.env.SECRET_KEY, {expiresIn: '1d'});
 
     return res.json({body, token});
@@ -30,6 +30,11 @@ exports.login = async function (req, res, next){
     err
   })
 }
+};
+
+exports.logout = (req, res, next) => {
+  req.logout();
+  res.redirect('/')
 };
 
 exports.register = [
@@ -52,6 +57,7 @@ body('confirmPassword')
     }
     return true
   }),
+
 async(req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()){
