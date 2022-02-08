@@ -5,11 +5,9 @@ const Comment = require('../models/comments')
 
 exports.allCommentsOnPost = async (req, res, next) => {
   try{
-    let comments = await Post.find({_id: req.params.postid}, {comments: 1})
-      .populate({
-        path: 'comments',
-        model: 'Comment'
-      })
+    let comments = await Comment.find({postId: req.params.postid},)
+      .populate('user', {username: 1})
+
     return res.status(200).json(comments)
   }
   catch(err){

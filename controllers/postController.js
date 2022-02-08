@@ -5,11 +5,9 @@ const Comment = require('../models/comments');
 
 exports.allPosts = async function (req, res, next){
   try{
-    let posts = await Post.find({})
-      .populate({
-        path: 'comments',
-        model: 'Comment'
-      })
+    let posts = await Post.find({},{title: 1, content: 1, timeStamp: 1, })
+    .populate('user', {username: 1, _id: 0})
+
     return res.status(200).json(posts)
   }
   catch(err){
@@ -20,10 +18,8 @@ exports.allPosts = async function (req, res, next){
 exports.singlePost = async function (req, res, next){
   try{
     let post = await Post.find({_id: req.params.postid})
-      .populate({
-        path: 'comments',
-        model: 'Comment'
-      })
+      .populate('user', {username: 1,})
+
     if (!post || post.length == 0){
       return res.status(404).json({message:'No post with id exists'})
     }
