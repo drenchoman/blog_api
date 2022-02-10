@@ -74,17 +74,17 @@ exports.updateLike = async (req, res, next) =>{
       }
     }
   )
-  if (commentToLike[0].likes === undefined || commentToLike[0].likes.length == 0){
+  if (commentToLike[0].likes === undefined || commentToLike[0].likes.length == 0 ){
     let result = await Comment.updateOne({
       _id: req.body.commentid,
       likes: {$ne : req.user._id}
     },
     {
-      $inc: {likeCount: 1},
+      $inc: {likeCount: +1},
       $push: {likes: req.user._id}
     }
   )
-  return res.json({result: result, comment: commentToLike})
+  return res.status(200).json({result: result, comment: commentToLike})
 } else {
   let result = await Comment.updateOne({
     _id: req.body.commentid,
@@ -95,10 +95,10 @@ exports.updateLike = async (req, res, next) =>{
     $pull: {likes: req.user._id}
   }
 )
-return res.json({result: result, comment: commentToLike})
+return res.status(200).json({result: result, comment: commentToLike})
 }
 } catch(err){
-  return res.json({err: err})
+  return res.status(400).json({err: err})
 }
 };
 
@@ -108,7 +108,7 @@ exports.createComment = [
   async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()){
-      return res.json({
+      return res.status(400).json({
         errors: errors.array(),
         data: req.body
       })
@@ -121,7 +121,7 @@ exports.createComment = [
       })
       comment.save(err =>{
         if(err){
-          return next(err)
+          res.status(400).json({err});
         }
         res.status(200).json({message:'Comment saved', comment})
       })

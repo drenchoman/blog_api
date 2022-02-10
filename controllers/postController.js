@@ -88,7 +88,7 @@ exports.createPost = [
   exports.updateLike = async(req, res, next) =>{
     try{
       let userHasLiked = await Post.find({
-        _id: req.params.postid
+        _id: req.body.postid
       },
       {
         likeCount: 1,

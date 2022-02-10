@@ -9,7 +9,7 @@ exports.login = async function (req, res, next){
   passport.authenticate('local', {session: false}, (err, user, info) =>{
     if (err || !user){
       const error = new Error('User does not exist')
-      return res.json({
+      return res.status(403).json({
         info
       })
     }
@@ -21,12 +21,12 @@ exports.login = async function (req, res, next){
     const body = {_id: user._id, username: user.username, admin: user.admin}
     const token = jwt.sign({user: body}, process.env.SECRET_KEY, {expiresIn: '1d'});
 
-    return res.json({body, token});
+    return res.status(200).json({body, token});
 
   });
 }) (req, res, next);
 } catch (err){
-  res.json({
+  res.status(403).json({
     err
   })
 }
@@ -34,7 +34,7 @@ exports.login = async function (req, res, next){
 
 exports.logout = (req, res, next) => {
   req.logout();
-  res.redirect('/')
+  
 };
 
 exports.register = [
@@ -61,7 +61,7 @@ body('confirmPassword')
 async(req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()){
-    return res.json({
+    return res.status(403).json({
       username: req.body.username,
       errors: errors.array()
     });
@@ -77,7 +77,7 @@ async(req, res, next) => {
         if (err){
           return next(err)
         }
-        res.json({
+        res.status(200).json({
           message: 'User created successfully',
         })
       })

@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const apiRouter = require('./routes/api');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 const app = express();
 
@@ -18,6 +19,7 @@ db.on('error', console.error.bind(console, 'mongo connection error'));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(cors());
 
 
 
