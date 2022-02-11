@@ -33,8 +33,9 @@ exports.login = async function (req, res, next){
 };
 
 exports.logout = (req, res, next) => {
-  req.logout();
-  
+  // req.logout() usually used for sessions. localstorage cleared client side instead
+  console.log('logged out')
+
 };
 
 exports.register = [
