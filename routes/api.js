@@ -14,6 +14,8 @@ router.post('/logout', auth_Controller.logout);
 
 router.get('/posts', post_Controller.allPosts);
 
+router.get('/posts/top', post_Controller.topPosts);
+
 router.get('/posts/:postid', post_Controller.singlePost);
 
 router.get('/posts/:postid/comments', comment_Controller.allCommentsOnPost);

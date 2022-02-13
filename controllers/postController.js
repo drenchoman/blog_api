@@ -15,6 +15,17 @@ exports.allPosts = async function (req, res, next){
   }
 };
 
+exports.topPosts = async function (req, res, next){
+  try{
+    let posts = await Post.find({},{title: 1, content: 1, timeStamp: 1, likeCount: 1})
+    .sort([['likeCount','descending']])
+    .populate('user', {username: 1, _id: 0})
+  return res.status(200).json(posts)
+} catch(err){
+  return res.status(200).json({message: 'No posts'})
+}
+};
+
 exports.singlePost = async function (req, res, next){
   try{
     let post = await Post.find({_id: req.params.postid})
@@ -51,8 +62,8 @@ exports.deleteSinglePost = async (req, res, next) => {
 }
 
 exports.createPost = [
-  body('title').trim().escape().isLength({min:1}).withMessage('Add a title to your post!'),
-  body('content').trim().escape().isLength({min:1}).withMessage('Add content to your blog post'),
+  body('title').trim().isLength({min:1}).withMessage('Add a title to your post!'),
+  body('content').trim().isLength({min:1}).withMessage('Add content to your blog post'),
 
   async (req, res, next) => {
     const errors = validationResult(req)

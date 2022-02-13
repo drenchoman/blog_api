@@ -70,10 +70,11 @@ exports.updateLike = async (req, res, next) =>{
     {
       likeCount: 1,
       likes: {
-        $elemMatch: { $eg: req.user._id}
+        $elemMatch: { $eq: req.user._id}
       }
     }
   )
+  console.log(commentToLike, "comment to like")
   if (commentToLike[0].likes === undefined || commentToLike[0].likes.length == 0 ){
     let result = await Comment.updateOne({
       _id: req.body.commentid,
