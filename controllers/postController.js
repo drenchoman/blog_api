@@ -5,7 +5,7 @@ const Comment = require('../models/comments');
 
 exports.allPosts = async function (req, res, next){
   try{
-    let posts = await Post.find({},{title: 1, content: 1, timeStamp: 1, })
+    let posts = await Post.find({},{title: 1, content: 1, timeStamp: 1, likeCount: 1 })
     .populate('user', {username: 1, _id: 0})
 
     return res.status(200).json(posts)
@@ -97,6 +97,7 @@ exports.createPost = [
       ];
 
   exports.updateLike = async(req, res, next) =>{
+    console.log(req.body.postid)
     try{
       let userHasLiked = await Post.find({
         _id: req.body.postid
@@ -114,11 +115,11 @@ exports.createPost = [
         likes: {$ne : req.user._id }
       },
       {
-        $inc: {likeCount: 1},
+        $inc: {likeCount: +1},
         $push:{likes: req.user._id}
       }
     )
-    return res.json({result: result, post: userHasLiked});
+    return res.status(200).json({result: result, post: userHasLiked});
   } else {
     let result = await Post.updateOne({
       _id: req.params.postid,
@@ -129,10 +130,10 @@ exports.createPost = [
       $pull: {likes: req.user._id}
     }
   )
-  return res.json({result: result, post: userHasLiked});
+  return res.status(200).json({result: result, post: userHasLiked});
   }
 
   } catch(err){
-    return res.json({err: err})
+    return res.status(400).json({err: err})
   }
 };
