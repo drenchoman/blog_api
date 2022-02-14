@@ -5,7 +5,7 @@ const Comment = require('../models/comments');
 
 exports.allPosts = async function (req, res, next){
   try{
-    let posts = await Post.find({},{title: 1, content: 1, timeStamp: 1, likeCount: 1 })
+    let posts = await Post.find({},{title: 1, content: 1, timeStamp: 1, likeCount: 1, comments: 1 })
     .populate('user', {username: 1, _id: 0})
 
     return res.status(200).json(posts)
@@ -17,7 +17,7 @@ exports.allPosts = async function (req, res, next){
 
 exports.topPosts = async function (req, res, next){
   try{
-    let posts = await Post.find({},{title: 1, content: 1, timeStamp: 1, likeCount: 1})
+    let posts = await Post.find({},{title: 1, content: 1, timeStamp: 1, likeCount: 1, comments: 1})
     .sort([['likeCount','descending']])
     .populate('user', {username: 1, _id: 0})
   return res.status(200).json(posts)
