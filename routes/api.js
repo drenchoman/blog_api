@@ -22,7 +22,7 @@ router.get('/posts/:postid/comments', comment_Controller.allCommentsOnPost);
 
 router.post('/posts/:postid/comments', passport.authenticate('jwt', {session: false}), comment_Controller.createComment);
 
-router.delete('/comments/:commentid', passport.authenticate('jwt', {session: false}), comment_Controller.deleteSingleComment);
+router.delete('/posts/:postid/comments/:commentid', passport.authenticate('jwt', {session: false}), comment_Controller.deleteSingleComment);
 
 router.delete('/posts/:postid', passport.authenticate('jwt', {session: false}), post_Controller.deleteSinglePost);
 
