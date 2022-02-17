@@ -46,7 +46,7 @@ exports.deleteSingleComment = async (req, res, next) => {
       return res.status(404).json({message: `No comment with id ${req.params.commentid}`})
     }
     else {
-    let deletedComment = await Post.find({}
+    let deletedComment = await Post.find({},
     {$pull: {
       comments: req.params.commentid
       }
