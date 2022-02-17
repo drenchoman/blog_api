@@ -53,7 +53,7 @@ exports.updateSinglePost = async (req, res, next) => {
         if (!post){
           return res.status(404).json({err: `No posts with id ${req.params.postid} exists`});
         }
-        res.status(200).json({message: `Post with id ${req.params.postid} updated`, post: });
+        res.status(200).json({message: `Post with id ${req.params.postid} updated`, post: post });
 
       }
       res.status(403).json({message: "You must be an admin to update the post"});
