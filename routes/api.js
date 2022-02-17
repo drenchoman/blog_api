@@ -34,6 +34,8 @@ router.get('/comments/:commentid', passport.authenticate('jwt', {session: false}
 
 router.put('/posts/:postid', passport.authenticate('jwt', {session: false}), post_Controller.updateLike);
 
+router.put('/posts/:postid/update', passport.authenticate('jwt', {session: false}), post_Controller.updateSinglePost);
+
 router.post('/posts', passport.authenticate('jwt', {session: false}), post_Controller.createPost);
 
 router.get('/users/:userid',  passport.authenticate('jwt', {session: false}), user_Controller.userProfile);
