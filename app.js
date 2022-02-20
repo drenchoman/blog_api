@@ -12,7 +12,7 @@ const cors = require('cors');
 const app = express();
 
 const options = {
-  origin: ['https://drenchoman.github.io/blogapi_cms/', 'https://blog-client-zeta.vercel.app/'],
+  origin: ['https://drenchoman.github.io/blogapi_cms/', 'https://blog-client-zeta.vercel.app/', 'https://drenchoman.github.io'],
   optionsSuccessStatus: 200
 }
 
