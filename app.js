@@ -24,8 +24,7 @@ db.on('error', console.error.bind(console, 'mongo connection error'));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-// app.use(cors(corsOptions));
-
+app.options('*', cors());
 
 
 app.use('/api', cors(corsOptions), apiRouter);
