@@ -107,7 +107,7 @@ return res.status(200).json({result: result, comment: commentToLike})
 };
 
 exports.createComment = [
-  body('comment').trim().escape().isLength({min:1}).withMessage('You have left an empty comment'),
+  body('comment').trim().isLength({min:1}).withMessage('You have left an empty comment'),
 
   async(req, res, next) => {
     const errors = validationResult(req);
