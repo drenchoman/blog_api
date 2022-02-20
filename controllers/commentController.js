@@ -41,6 +41,7 @@ exports.singleComment = async (req, res, next) => {
 
 exports.deleteSingleComment = async (req, res, next) => {
   try{
+    if (req.user.admin){
     let comment = await Comment.findByIdAndDelete({_id: req.params.commentid})
     if (!comment){
       return res.status(404).json({message: `No comment with id ${req.params.commentid}`})
@@ -56,6 +57,8 @@ exports.deleteSingleComment = async (req, res, next) => {
   )
     return res.status(200).json({message: `Deleted comment with id ${req.params.commentid} and removed from ${req.params.postid}`, comment: comment, deletedComment})
   }
+}
+  return res.status(403).json({message: "You must be an admin to update the post"});
 } catch(err){
   return next(err);
   }
