@@ -11,6 +11,11 @@ const cors = require('cors');
 
 const app = express();
 
+const options = {
+  origin: ['https://drenchoman.github.io/blogapi_cms/', 'https://blog-client-zeta.vercel.app/'],
+  optionsSuccessStatus: 200
+}
+
 const mongoDb = process.env.DB_URL;
 mongoose.connect(mongoDb, {useUnifiedTopology: true, useNewUrlParser: true});
 const db = mongoose.connection;
@@ -19,7 +24,7 @@ db.on('error', console.error.bind(console, 'mongo connection error'));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(options));
 
 
 
