@@ -11,8 +11,8 @@ const cors = require('cors');
 
 const app = express();
 
-const options = {
-  origin: ['https://drenchoman.github.io/blogapi_cms/', 'https://blog-client-zeta.vercel.app/', 'https://drenchoman.github.io'],
+let corsOptions = {
+  origin: ['https://drenchoman.github.io/blogapi_cms/', 'https://blog-client-zeta.vercel.app/', 'https://drenchoman.github.io', 'http://localhost:3000'],
   optionsSuccessStatus: 200
 }
 
@@ -24,11 +24,11 @@ db.on('error', console.error.bind(console, 'mongo connection error'));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use(cors(options));
+// app.use(cors(corsOptions));
 
 
 
-app.use('/api', apiRouter);
+app.use('/api', cors(corsOptions), apiRouter);
 
 
 app.listen(process.env.PORT, () => console.log(`Server listening on ${process.env.PORT}`))
